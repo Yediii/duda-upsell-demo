@@ -273,7 +273,7 @@ function pageShell({ title, subtitle, name, content, script }) {
   </style>
 </head>
 <body>
-  <div class="close">×</div>
+  <div class="close" id="closeBtn" style="display:none;">×</div>
   <main class="page">
     <div class="hello">${name}</div>
     <h1 class="headline">${title}</h1>
@@ -332,6 +332,23 @@ async function submitUpgrade() {
   } else {
     document.getElementById('status').innerText = data.error || 'Error';
   }
+}
+const isIframe = window.self !== window.top;
+    const isIframe = window.self !== window.top;
+
+const closeBtn = document.getElementById('closeBtn');
+
+if (isIframe) {
+  closeBtn.style.display = 'block';
+
+  closeBtn.onclick = () => {
+    if (window.publishOverlayAPI) {
+      publishOverlayAPI.closeOverlay();
+    } else {
+      // fallback (just in case)
+      window.history.back();
+    }
+  };
 }
 </script>`;
 
