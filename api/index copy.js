@@ -22,6 +22,7 @@ app.use((req, res, next) => {
 
 const DUDA_API_TOKEN = process.env.DUDA_API_TOKEN || '0394b843802a41839b738d6daa304d19';
 const DUDA_API_BASE = process.env.DUDA_API_BASE || 'https://api.duda.co';
+const PORT = process.env.PORT || 3000;
 
 const translations = {
   en: {
@@ -123,71 +124,56 @@ function pageShell({ title, subtitle, name, content, script }) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${title}</title>
-  <script src="https://my.duda.co/_dm/s/common/scripts/publishOverlayAPI.js"></script>
   <style>
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Inter, Arial, sans-serif;
       color: #282c36;
       background: #ffffff;
-      min-height: 100vh;
     }
-
     .close {
       position: fixed;
       right: 28px;
       top: 22px;
       font-size: 28px;
       color: #555;
-      cursor: pointer;
-      transition: opacity 0.2s ease;
-      z-index: 1000;
     }
-
-    .close:hover {
-      opacity: 0.6;
-    }
-
     .page {
-      padding: 40px 20px 60px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      max-width: 1100px;
-      margin: 0 auto;
+  padding: 40px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
     }
-
     .headline {
-      font-size: 56px;
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -2px;
-      margin: 0 0 18px;
-      text-align: center;
+  font-size: 56px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -2px;
+  margin: 0 0 18px;
+  text-align: center;
     }
-
     .subtitle {
       text-align: center;
       font-size: 22px;
       font-weight: 700;
       margin-bottom: 80px;
     }
-
     .hello {
-      font-size: 16px;
-      color: #6b7280;
-      margin-bottom: 12px;
-      text-align: center;
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  text-align: center;
     }
-
+    .center {
+      max-width: 920px;
+      margin: 0 auto;
+    }
     .plans {
       display: flex;
       justify-content: center;
     }
-
     .plan {
       width: 360px;
       background: #f5f5f7;
@@ -195,7 +181,6 @@ function pageShell({ title, subtitle, name, content, script }) {
       padding: 28px 24px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.06);
     }
-
     .badge {
       display: inline-block;
       background: #d8c4ff;
@@ -206,7 +191,6 @@ function pageShell({ title, subtitle, name, content, script }) {
       border-radius: 4px;
       margin-bottom: 18px;
     }
-
     .icon {
       width: 38px;
       height: 38px;
@@ -218,12 +202,10 @@ function pageShell({ title, subtitle, name, content, script }) {
       font-weight: 900;
       margin-bottom: 18px;
     }
-
     .plan h2 {
       font-size: 22px;
       margin: 0 0 24px;
     }
-
     button {
       width: 100%;
       border: 0;
@@ -235,34 +217,26 @@ function pageShell({ title, subtitle, name, content, script }) {
       font-weight: 700;
       cursor: pointer;
     }
-
-    button:hover {
-      opacity: 0.92;
-    }
-
+    button:hover { opacity: 0.92; }
     .section-title {
       margin-top: 56px;
       font-size: 17px;
       font-weight: 800;
     }
-
     .features {
       margin-top: 34px;
     }
-
     .feature {
       padding: 13px 0;
       border-bottom: 1px solid #e3e3e8;
       font-size: 15px;
     }
-
     .feature strong {
       display: block;
       font-size: 17px;
       margin-top: 8px;
       margin-bottom: 14px;
     }
-
     .checkout {
       max-width: 460px;
       margin: 0 auto;
@@ -271,15 +245,12 @@ function pageShell({ title, subtitle, name, content, script }) {
       padding: 30px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.06);
     }
-
     label {
       display: block;
       font-size: 14px;
       font-weight: 700;
       margin: 18px 0 8px;
-      text-align: left;
     }
-
     input {
       width: 100%;
       height: 48px;
@@ -289,13 +260,11 @@ function pageShell({ title, subtitle, name, content, script }) {
       font-size: 16px;
       background: white;
     }
-
     .row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
-
     #status {
       margin-top: 18px;
       text-align: center;
@@ -305,53 +274,15 @@ function pageShell({ title, subtitle, name, content, script }) {
 </head>
 <body>
   <div class="close" id="closeBtn" style="display:none;">×</div>
-
   <main class="page">
     <div class="hello">${name}</div>
     <h1 class="headline">${title}</h1>
     <div class="subtitle">${subtitle}</div>
     ${content}
   </main>
-
   ${script}
 </body>
 </html>
-`;
-}
-
-function clientHelpers() {
-  return `
-function isInsideIframe() {
-  return window.self !== window.top;
-}
-
-function setupOverlayCloseButton() {
-  const closeBtn = document.getElementById('closeBtn');
-
-  if (!closeBtn || !isInsideIframe()) {
-    return;
-  }
-
-  closeBtn.style.display = 'block';
-
-  closeBtn.onclick = () => {
-    if (window.publishOverlayAPI && typeof window.publishOverlayAPI.closeOverlay === 'function') {
-      window.publishOverlayAPI.closeOverlay();
-    } else {
-      window.history.back();
-    }
-  };
-}
-
-function redirectToSso(url) {
-  if (isInsideIframe()) {
-    window.open(url, '_top');
-  } else {
-    window.location.href = url;
-  }
-}
-
-setupOverlayCloseButton();
 `;
 }
 
@@ -384,12 +315,8 @@ function upgradePage(req, res) {
 
   const script = `
 <script>
-${clientHelpers()}
-
 async function submitUpgrade() {
-  const status = document.getElementById('status');
-  status.innerText = '${copy.processing}';
-
+  document.getElementById('status').innerText = '${copy.processing}';
   const params = new URLSearchParams(window.location.search);
 
   const response = await fetch('/upgrade', {
@@ -401,10 +328,31 @@ async function submitUpgrade() {
   const data = await response.json();
 
   if (data.ssoUrl) {
-    redirectToSso(data.ssoUrl);
+   if (window.self !== window.top) {
+  window.top.location.href = data.ssoUrl;
+} else {
+  window.location.href = data.ssoUrl;
+}
   } else {
-    status.innerText = data.error || 'Error';
+    document.getElementById('status').innerText = data.error || 'Error';
   }
+}
+const isIframe = window.self !== window.top;
+    const isIframe = window.self !== window.top;
+
+const closeBtn = document.getElementById('closeBtn');
+
+if (isIframe) {
+  closeBtn.style.display = 'block';
+
+  closeBtn.onclick = () => {
+    if (window.publishOverlayAPI) {
+      publishOverlayAPI.closeOverlay();
+    } else {
+      // fallback (just in case)
+      window.history.back();
+    }
+  };
 }
 </script>`;
 
@@ -451,12 +399,8 @@ function publishPage(req, res) {
 
   const script = `
 <script>
-${clientHelpers()}
-
 async function submitPublish() {
-  const status = document.getElementById('status');
-  status.innerText = '${copy.processing}';
-
+  document.getElementById('status').innerText = '${copy.processing}';
   const params = new URLSearchParams(window.location.search);
 
   const response = await fetch('/publish', {
@@ -468,9 +412,13 @@ async function submitPublish() {
   const data = await response.json();
 
   if (data.ssoUrl) {
-    redirectToSso(data.ssoUrl);
+    if (window.self !== window.top) {
+  window.top.location.href = data.ssoUrl;
+} else {
+  window.location.href = data.ssoUrl;
+}
   } else {
-    status.innerText = data.error || 'Error';
+    document.getElementById('status').innerText = data.error || 'Error';
   }
 }
 </script>`;
@@ -487,16 +435,16 @@ async function submitPublish() {
 app.get('/', (req, res) => {
   const { origin, planid } = req.query;
 
-  const normalizedOrigin = String(origin || '').toUpperCase();
-  const normalizedPlanId = String(planid || '');
+const normalizedOrigin = String(origin || '').toUpperCase();
+const normalizedPlanId = String(planid || '');
 
-  if (normalizedOrigin === 'PUBLISH') {
-    return publishPage(req, res);
-  }
+if (normalizedOrigin === 'PUBLISH') {
+  return publishPage(req, res);
+}
 
-  if (normalizedOrigin === 'UPGRADE' && normalizedPlanId === '7') {
-    return upgradePage(req, res);
-  }
+if (normalizedOrigin === 'UPGRADE' && normalizedPlanId === '7') {
+  return upgradePage(req, res);
+}
 
   res.status(400).send('Invalid flow');
 });
@@ -538,7 +486,7 @@ app.post('/upgrade', async (req, res) => {
   try {
     const { sitename, accountname, origin, planid } = req.body;
 
-    if (String(origin || '').toUpperCase() !== 'UPGRADE' || String(planid || '') !== '7') {
+    if (origin !== 'UPGRADE' || planid !== '7') {
       return res.status(400).json({ error: 'Invalid upgrade flow' });
     }
 
