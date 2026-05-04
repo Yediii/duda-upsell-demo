@@ -479,7 +479,7 @@ app.get('/', (req, res) => {
     return publishPage(req, res);
   }
 
-  if (normalizedOrigin === 'UPGRADE' && normalizedPlanId === '7') {
+  if (normalizedOrigin === 'UPGRADE') {
     return upgradePage(req, res);
   }
 
@@ -523,9 +523,9 @@ app.post('/upgrade', async (req, res) => {
   try {
     const { sitename, accountname, origin, planid } = req.body;
 
-    if (String(origin || '').toUpperCase() !== 'UPGRADE' || String(planid || '') !== '7') {
-      return res.status(400).json({ error: 'Invalid upgrade flow' });
-    }
+if (String(origin || '').toUpperCase() !== 'UPGRADE') {
+  return res.status(400).json({ error: 'Invalid upgrade flow' });
+}
 
     if (!sitename || !accountname) {
       return res.status(400).json({ error: 'Missing sitename or accountname' });
