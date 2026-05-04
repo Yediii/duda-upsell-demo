@@ -75,6 +75,13 @@ const translations = {
 };
 
 const features = [
+  ['Site features'],
+  ['Site Backups'],
+  ['URL Redirects'],
+  ['Pop-Ups'],
+  ['Unlimited Number Of Pages'],
+  ['Multi-language Site'],
+  ['Dev Mode'],
   ['Bookings'],
   ['10 Staff calendars'],
   ['Connect calendars'],
@@ -304,8 +311,6 @@ function pageShell({ title, subtitle, name, content, script }) {
   </style>
 </head>
 <body>
-  <div class="close" id="closeBtn" style="display:none;">×</div>
-
   <main class="page">
     <div class="hello">${name}</div>
     <h1 class="headline">${title}</h1>
@@ -325,24 +330,6 @@ function isInsideIframe() {
   return window.self !== window.top;
 }
 
-function setupOverlayCloseButton() {
-  const closeBtn = document.getElementById('closeBtn');
-
-  if (!closeBtn || !isInsideIframe()) {
-    return;
-  }
-
-  closeBtn.style.display = 'block';
-
-  closeBtn.onclick = () => {
-    if (window.publishOverlayAPI && typeof window.publishOverlayAPI.closeOverlay === 'function') {
-      window.publishOverlayAPI.closeOverlay();
-    } else {
-      window.history.back();
-    }
-  };
-}
-
 function redirectToSso(url) {
   if (isInsideIframe()) {
     window.open(url, '_top');
@@ -350,8 +337,6 @@ function redirectToSso(url) {
     window.location.href = url;
   }
 }
-
-setupOverlayCloseButton();
 `;
 }
 
@@ -371,7 +356,7 @@ function upgradePage(req, res) {
         <div class="section-title">${copy.core}</div>
         <div class="features">
           ${features.map(([f]) =>
-            ['Bookings', 'eCommerce'].includes(f)
+            ['Site features', 'Bookings', 'eCommerce'].includes(f)
               ? `<div class="feature"><strong>${f}</strong></div>`
               : `<div class="feature">${f}</div>`
           ).join('')}
@@ -547,7 +532,7 @@ app.post('/upgrade', async (req, res) => {
     }
 
     const planRes = await fetch(
-      `${DUDA_API_BASE}/api/sites/multiscreen/${encodeURIComponent(sitename)}/plan/22`,
+      `${DUDA_API_BASE}/api/sites/multiscreen/${encodeURIComponent(sitename)}/plan/626`,
       {
         method: 'POST',
         headers: headers()
