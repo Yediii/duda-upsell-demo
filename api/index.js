@@ -4,7 +4,21 @@ import helmet from 'helmet';
 
 const app = express();
 app.use(express.json());
-app.use(helmet({ contentSecurityPolicy: false }));
+
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    frameguard: false
+  })
+);
+
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "frame-ancestors 'self' https://*.duda.co https://*.responsivewebsitebuilder.io"
+  );
+  next();
+});
 
 const DUDA_API_TOKEN = process.env.DUDA_API_TOKEN || '0394b843802a41839b738d6daa304d19';
 const DUDA_API_BASE = process.env.DUDA_API_BASE || 'https://api.duda.co';
