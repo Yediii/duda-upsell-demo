@@ -396,13 +396,16 @@ async function submitPublish() {
 app.get('/', (req, res) => {
   const { origin, planid } = req.query;
 
-  if (origin === 'UPGRADE' && planid === '7') {
-    return upgradePage(req, res);
-  }
+const normalizedOrigin = String(origin || '').toUpperCase();
+const normalizedPlanId = String(planid || '');
 
-  if (origin === 'PUBLISH') {
-    return publishPage(req, res);
-  }
+if (normalizedOrigin === 'PUBLISH') {
+  return publishPage(req, res);
+}
+
+if (normalizedOrigin === 'UPGRADE' && normalizedPlanId === '7') {
+  return upgradePage(req, res);
+}
 
   res.status(400).send('Invalid flow');
 });
